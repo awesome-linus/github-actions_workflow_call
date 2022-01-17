@@ -1,0 +1,24 @@
+name: Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+    outputs:
+      hello_world:
+        description: "Hello World"
+        value: ${{ jobs.reusable_job.outputs.hello_world }}
+
+jobs:
+  reusable_job:
+    name: input and output
+    runs-on: ubuntu-latest
+    outputs:
+      hello_world: ${{ steps.output_step.outputs.hello_world }}
+    steps:
+      - id: output_step
+        run: |
+          HELLO_WORLD="Hello World ${{ inputs.name }} From Reusable Workflow!"
+          echo "::set-output name=hello_world::$(echo $HELLO_WORLD)"
